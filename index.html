@@ -1,4 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUPEC TRADE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body{
+font-family: Arial;
+background:#f5f5f5;
+margin:0;
+}
+
+header{
+background:#111;
+color:white;
+padding:20px;
+text-align:center;
+font-size:24px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.product{
+background:white;
+padding:15px;
+margin-bottom:10px;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+}
+</style>
+</head>
+
+<body>
+
+<header>KUPEC TRADE DISTRIBUTION</header>
+
+<div class="container" id="products"></div>
+
+<script>
+
 const supabase = window.supabase.createClient(
 "https://irjdqrdiocmzbiyijzni.supabase.co",
 "sb_publishable_8J_23fisR7Oqmset3_A4RA__Cjr5Hhm"
 )
+
+async function loadProducts(){
+
+const { data } = await supabase
+.from("products")
+.select("*")
+
+const container = document.getElementById("products")
+
+container.innerHTML=""
+
+data.forEach(p => {
+
+container.innerHTML += `
+<div class="product">
+<div>
+<b>${p.name}</b><br>
+Цена: ${p.price}
+</div>
+<button>Добавить</button>
+</div>
+`
+
+})
+
+}
+
+loadProducts()
+
+</script>
+
+</body>
+</html>
