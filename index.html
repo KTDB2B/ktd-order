@@ -47,16 +47,22 @@ justify-content:space-between;
 
 <script>
 
-const supabase = window.supabase.createClient(
+const supabaseClient = supabase.createClient(
 "https://irjdqrdiocmzbiyijzni.supabase.co",
-"sb_publishable_8J_23fisR7Oqmset3_A4RA__Cjr5Hhm"
+"ТВОЙ_KEY"
 )
 
 async function loadProducts(){
 
-const { data } = await supabase
+const { data, error } = await supabaseClient
 .from("products")
 .select("*")
+.order("sort_order", { ascending: true })
+
+if(error){
+console.log(error)
+return
+}
 
 const container = document.getElementById("products")
 
@@ -68,7 +74,8 @@ container.innerHTML += `
 <div class="product">
 <div>
 <b>${p.name}</b><br>
-Цена: ${p.price}
+Объем: ${p.volume} л<br>
+Цена: ${p.price} ₸
 </div>
 <button>Добавить</button>
 </div>
