@@ -57,7 +57,6 @@ async function loadProducts(){
 const { data, error } = await supabaseClient
 .from("products")
 .select("*")
-.order("sort_order", { ascending: true })
 
 if(error){
 console.log(error)
