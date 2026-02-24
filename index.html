@@ -42,7 +42,12 @@ justify-content:space-between;
 <body>
 
 <header>KUPEC TRADE DISTRIBUTION</header>
-
+  
+<div style="padding:15px;background:#eee;display:flex;justify-content:space-between">
+<div>Товаров: <b id="cartCount">0</b></div>
+<button onclick="sendOrder()">Отправить заказ</button>
+</div>
+  
 <div class="container" id="products"></div>
 
 <script>
@@ -52,6 +57,8 @@ const supabaseClient = supabase.createClient(
 "sb_publishable_8J_23fisR7Oqmset3_A4RA__Cjr5Hhm"
 )
 
+let cart = {}
+
 async function loadProducts(){
 
 const { data, error } = await supabaseClient
@@ -59,11 +66,6 @@ const { data, error } = await supabaseClient
 .select("*")
 .eq("is_active", true)
 .order("sort_order", { ascending: true })
-
-if(error){
-console.log(error)
-return
-}
 
 const container = document.getElementById("products")
 
@@ -75,14 +77,77 @@ container.innerHTML += `
 <div class="product">
 <div>
 <b>${p.name}</b><br>
-Объем: ${p.volume} л<br>
-Цена: ${p.price} ₸
+${p.volume} л<br>
+${p.price} ₸
 </div>
-<button>Добавить</button>
+
+<div>
+<button onclick="minus('${p.id}')">−</button>
+<span id="q_${p.id}">0</span>
+<button onclick="plus('${p.id}')">+</button>
+</div>
+
 </div>
 `
 
 })
+
+}
+
+function plus(id){
+
+if(!cart[id]) cart[id]=0
+cart[id]++
+
+updateQty(id)
+
+}
+
+function minus(id){
+
+if(!cart[id]) return
+cart[id]--
+
+if(cart[id] < 0) cart[id] = 0
+
+updateQty(id)
+
+}
+
+function updateQty(id){
+
+document.getElementById("q_"+id).innerText = cart[id] || 0
+updateCart()
+
+}
+
+function updateCart(){
+
+let total = 0
+
+for(let id in cart){
+total += cart[id]
+}
+
+document.getElementById("cartCount").innerText = total
+
+}
+
+function sendOrder(){
+
+let text = "Заказ:%0A"
+
+for(let id in cart){
+
+let qty = cart[id]
+
+if(qty > 0){
+text += qty + " шт%0A"
+}
+
+}
+
+window.open("https://wa.me/?text=" + text)
 
 }
 
