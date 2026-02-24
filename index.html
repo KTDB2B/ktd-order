@@ -42,15 +42,6 @@ justify-content:space-between;
 <body>
 
 <header>KUPEC TRADE DISTRIBUTION</header>
-
-<div style="padding:10px">
-<input 
-id="search"
-placeholder="Поиск напитка..."
-oninput="filterProducts()"
-style="width:100%;padding:8px;font-size:16px"
->
-</div>
   
 <div style="
 position:sticky;
@@ -78,28 +69,6 @@ border-bottom:1px solid #ccc;
   
 <div class="container" id="products"></div>
 
-function filterProducts(){
-
-let value = document
-.getElementById("search")
-.value
-.toLowerCase()
-
-document.querySelectorAll(".product")
-.forEach(el => {
-
-let text = el.innerText.toLowerCase()
-
-if(text.includes(value)){
-el.style.display="flex"
-}else{
-el.style.display="none"
-}
-
-})
-
-}
-  
 <script>
 
 const supabaseClient = supabase.createClient(
