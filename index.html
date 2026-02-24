@@ -44,7 +44,7 @@ justify-content:space-between;
 <header>KUPEC TRADE DISTRIBUTION</header>
   
 <div style="padding:15px;background:#eee;display:flex;justify-content:space-between">
-<div>Товаров: <b id="cartCount">0</b></div>
+<div>Товаров: <b id="cartCount">0</b> | Сумма: <b id="cartSum">0</b> ₸</div>
 <button onclick="sendOrder()">Отправить заказ</button>
 </div>
   
@@ -58,6 +58,7 @@ const supabaseClient = supabase.createClient(
 )
 
 let cart = {}
+let productsMap = {}
 
 async function loadProducts(){
 
@@ -72,6 +73,7 @@ const container = document.getElementById("products")
 container.innerHTML=""
 
 data.forEach(p => {
+productsMap[p.id] = p
 
 container.innerHTML += `
 <div class="product">
@@ -123,10 +125,28 @@ updateCart()
 
 function updateCart(){
 
-let total = 0
+let totalQty = 0
+let totalSum = 0
 
 for(let id in cart){
-total += cart[id]
+
+let qty = cart[id]
+
+if(qty > 0){
+
+totalQty += qty
+
+let p = productsMap[id]
+
+totalSum += p.price * qty
+
+}
+
+}
+
+document.getElementById("cartCount").innerText = totalQty
+document.getElementById("cartSum").innerText = totalSum
+
 }
 
 document.getElementById("cartCount").innerText = total
@@ -135,17 +155,30 @@ document.getElementById("cartCount").innerText = total
 
 function sendOrder(){
 
-let text = "Заказ:%0A"
+let text = "Заказ:%0A%0A"
+let total = 0
 
 for(let id in cart){
 
 let qty = cart[id]
 
 if(qty > 0){
-text += qty + " шт%0A"
+
+let p = productsMap[id]
+
+let sum = p.price * qty
+
+total += sum
+
+text += p.name + " " + p.volume + "л"
+text += " — " + qty + " шт"
+text += " = " + sum + " ₸%0A"
+
 }
 
 }
+
+text += "%0AИтого: " + total + " ₸"
 
 window.open("https://wa.me/?text=" + text)
 
