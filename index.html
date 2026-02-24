@@ -66,13 +66,18 @@ const { data, error } = await supabaseClient
 .from("products")
 .select("*")
 .eq("is_active", true)
-.order("sort_order", { ascending: true })
+
+if(error){
+console.log(error)
+return
+}
 
 const container = document.getElementById("products")
 
 container.innerHTML=""
 
 data.forEach(p => {
+
 productsMap[p.id] = p
 
 container.innerHTML += `
@@ -98,7 +103,7 @@ ${p.price} ₸
 
 function plus(id){
 
-if(!cart[id]) cart[id]=0
+if(!cart[id]) cart[id] = 0
 cart[id]++
 
 updateQty(id)
@@ -135,9 +140,7 @@ let qty = cart[id]
 if(qty > 0){
 
 totalQty += qty
-
 let p = productsMap[id]
-
 totalSum += p.price * qty
 
 }
@@ -146,10 +149,6 @@ totalSum += p.price * qty
 
 document.getElementById("cartCount").innerText = totalQty
 document.getElementById("cartSum").innerText = totalSum
-
-}
-
-document.getElementById("cartCount").innerText = total
 
 }
 
@@ -165,7 +164,6 @@ let qty = cart[id]
 if(qty > 0){
 
 let p = productsMap[id]
-
 let sum = p.price * qty
 
 total += sum
