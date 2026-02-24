@@ -43,9 +43,28 @@ justify-content:space-between;
 
 <header>KUPEC TRADE DISTRIBUTION</header>
   
-<div style="padding:15px;background:#eee;display:flex;justify-content:space-between">
-<div>Товаров: <b id="cartCount">0</b> | Сумма: <b id="cartSum">0</b> ₸</div>
+<div style="
+position:sticky;
+top:0;
+background:#eee;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:10;
+border-bottom:1px solid #ccc;
+">
+
+<div>
+Товаров: <b id="cartCount">0</b> |
+Сумма: <b id="cartSum">0</b> ₸
+</div>
+
+<div>
+<button onclick="clearCart()">Очистить</button>
 <button onclick="sendOrder()">Отправить заказ</button>
+</div>
+
 </div>
   
 <div class="container" id="products"></div>
@@ -82,7 +101,8 @@ productsMap[p.id] = p
 
 container.innerHTML += `
 <div class="product">
-<div>
+
+<div style="width:220px">
 <b>${p.name}</b><br>
 ${p.volume} л<br>
 ${p.price} ₸
@@ -92,6 +112,10 @@ ${p.price} ₸
 <button onclick="minus('${p.id}')">−</button>
 <span id="q_${p.id}">0</span>
 <button onclick="plus('${p.id}')">+</button>
+</div>
+
+<div id="sum_${p.id}" style="width:120px;text-align:right">
+0 ₸
 </div>
 
 </div>
@@ -123,7 +147,31 @@ updateQty(id)
 
 function updateQty(id){
 
-document.getElementById("q_"+id).innerText = cart[id] || 0
+let qty = cart[id] || 0
+
+document.getElementById("q_"+id).innerText = qty
+
+let p = productsMap[id]
+
+let sum = p.price * qty
+
+document.getElementById("sum_"+id).innerText = sum + " ₸"
+
+updateCart()
+
+}
+
+function clearCart(){
+
+cart = {}
+
+for(let id in productsMap){
+
+document.getElementById("q_"+id).innerText = 0
+document.getElementById("sum_"+id).innerText = "0 ₸"
+
+}
+
 updateCart()
 
 }
