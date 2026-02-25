@@ -242,12 +242,6 @@ window.open("https://wa.me/?text=" + encodeURIComponent(text))
 let shop = null
 
 async function loadShop(){
-  async function start(){
-  await loadShop()
-  loadProducts()
-}
-
-start()
 
   const params = new URLSearchParams(window.location.search)
   const token = params.get("t")
@@ -255,17 +249,25 @@ start()
   if(!token) return
 
   const { data } = await supabaseClient
-  .from("profiles")
-  .select("*")
-  .eq("token", token)
-  .single()
+    .from("profiles")
+    .select("*")
+    .eq("token", token)
+    .single()
 
   shop = data
 
   if(shop){
-  document.getElementById("title").innerText = shop.company_name
-}
+    document.getElementById("title").innerText = shop.company_name
   }
+
+}
+
+async function start(){
+  await loadShop()
+  loadProducts()
+}
+
+start()
   
 </script>
 
