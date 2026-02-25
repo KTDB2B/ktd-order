@@ -228,7 +228,7 @@ total += sum
 
 text += p.name + " " + p.volume + "л"
 text += " — " + qty + " шт"
-text += " = " + sum + " ₸%0A"
+text += " = " + sum + " ₸\n"
 
 }
 
@@ -236,7 +236,7 @@ text += " = " + sum + " ₸%0A"
 
 text += "%0AИтого: " + total + " ₸"
 
-window.open("https://wa.me/?text=" + text)
+window.open("https://wa.me/?text=" + encodeURIComponent(text))
 
 }
 let shop = null
