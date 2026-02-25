@@ -202,7 +202,17 @@ document.getElementById("cartSum").innerText = totalSum
 
 function sendOrder(){
 
-let text = `Магазин: ${shop?.company_name || ""}%0AЗаказ:%0A`
+let text = ""
+
+if(shop){
+text += "Магазин: " + shop.company_name + "\n"
+text += "Город: " + shop.city + "\n"
+text += "Адрес: " + shop.address + "\n"
+text += "Телефон: " + shop.phone + "\n\n"
+text += "\nДата: " + new Date().toLocaleString() + "\n\n"
+}
+
+text += "Заказ:\n"
 let total = 0
 
 for(let id in cart){
