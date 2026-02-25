@@ -41,7 +41,7 @@ justify-content:space-between;
 
 <body>
 
-<header>KUPEC TRADE DISTRIBUTION</header>
+<header id="title">KUPEC TRADE DISTRIBUTION</header>
   
 <div style="
 position:sticky;
@@ -202,7 +202,7 @@ document.getElementById("cartSum").innerText = totalSum
 
 function sendOrder(){
 
-let text = "Заказ:%0A%0A"
+let text = `Магазин: ${shop?.company_name || ""}%0AЗаказ:%0A`
 let total = 0
 
 for(let id in cart){
@@ -229,9 +229,33 @@ text += "%0AИтого: " + total + " ₸"
 window.open("https://wa.me/?text=" + text)
 
 }
+let shop = null
 
+async function loadShop(){
+
+  const params = new URLSearchParams(window.location.search)
+  const token = params.get("t")
+
+  if(!token) return
+
+  const { data } = await supabaseClient
+  .from("profiles")
+  .select("*")
+  .eq("token", token)
+  .single()
+
+  shop = data
+
+  if(shop){
+  document.getElementById("title").innerText = shop.company_name
+}
+  }
+
+}
+  
+loadShop()
 loadProducts()
-
+  
 </script>
 
 </body>
