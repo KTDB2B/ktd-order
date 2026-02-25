@@ -254,7 +254,7 @@ const { data } = await supabaseClient
 .from("profiles")
 .select("*")
 .eq("token", token)
-.single()
+.maybeSingle()
 
 shop = data
 
