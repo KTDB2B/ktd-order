@@ -243,22 +243,24 @@ let shop = null
 
 async function loadShop(){
 
-  const params = new URLSearchParams(window.location.search)
-  const token = params.get("t")
+const params = new URLSearchParams(window.location.search)
+const token = params.get("t")
 
-  if(!token) return
+if(!token){
+return
+}
 
-  const { data } = await supabaseClient
-    .from("profiles")
-    .select("*")
-    .eq("token", token)
-    .single()
+const { data } = await supabaseClient
+.from("profiles")
+.select("*")
+.eq("token", token)
+.single()
 
-  shop = data
+shop = data
 
-  if(shop){
-    document.getElementById("title").innerText = shop.company_name
-  }
+if(shop){
+document.getElementById("title").innerText = shop.company_name
+}
 
 }
 
